@@ -128,6 +128,7 @@ const homeworlds = homeworldsLowerCase
 const characterVisibilityButton = document.getElementById("character-visible-btn");
 const characterSectionEl = document.getElementById("character-container")
 const filterSectionEl = document.getElementById("filter-card-container")
+
 let isVisible = false;
 
 const renderHomeworldFilterItem = () => {
@@ -141,28 +142,9 @@ const renderHomeworldFilterItem = () => {
                     ${homeworld}
                 </label>
             </div>
-        </div>w
+        </div>
         `
     })
-}
-
-const renderCharacters = () => {
-    // Önce mevcut içerikleri temizle
-    characterSectionEl.innerHTML = "";
-
-    // Her karakteri map ile döngüye al ve HTML yapısını oluştur
-    charactersData.map((data) => {
-        characterSectionEl.innerHTML += `
-            <div class="col-lg-4 col-md-6">
-                <div class="card border-success mb-3">
-                    <div class="card-header">${data.homeworld}</div>
-                    <div class="card-body text-success">
-                        <h5 class="card-title">${data.name}</h5>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
 }
 
 const showCharacter = () => {
@@ -179,9 +161,30 @@ const showCharacter = () => {
         characterVisibilityButton.textContent = "Karakterleri Göster";
     }
 }
-
 const handleFilterChange = (targetFilter) => {
-    console.log(targetFilter.target.value);
+    renderCharacters(targetFilter.target.value);
+}
+const renderCharacters = (render) => {
+    // Önce mevcut içerikleri temizle
+    let filterData = charactersData;
+    characterSectionEl.innerHTML = "";
+    if (render != null) {
+        filterData = charactersData.filter((data) => data.homeworld == render)
+    }
+    console.log(filterData);
+    // Her karakteri map ile döngüye al ve HTML yapısını oluştur
+    filterData.map((data) => {
+        characterSectionEl.innerHTML += `
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-success mb-3">
+                    <div class="card-header">${data.homeworld || "other"}</div>
+                    <div class="card-body text-success">
+                        <h5 class="card-title">${data.name}</h5>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
 }
 
 characterVisibilityButton.addEventListener("click", showCharacter);
